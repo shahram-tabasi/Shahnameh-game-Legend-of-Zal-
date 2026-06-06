@@ -10,7 +10,6 @@ class Game {
     this.lastT = 0;
 
     this.scenes = new SceneManager(this);
-    this.scenes.register('title', TitleScene);
     this.scenes.register('menu', MenuScene);
     this.scenes.register('about', AboutScene);
     this.scenes.register('gallery', GalleryScene);
@@ -37,7 +36,7 @@ class Game {
     const loading = document.getElementById('loading');
     if (loading) loading.classList.add('hidden');
 
-    this.scenes.go('title');
+    this.scenes.go('menu');
 
     // پیش‌بارگذاری فونت وزیرمتن تا بوم از همان فریم اول از آن استفاده کند
     let started = false;

@@ -47,17 +47,21 @@ class PlatformerStage extends Scene {
     this._updateParticles(dt);
 
     if (this.state === 'intro') {
-      if (this.timer > 3.5 || Input.just('jump') || Input.just('confirm') || Input.pointer.justDown)
-        this.state = 'play';
+      if (this.timer > 0.4 && (Input.just('jump') || Input.just('confirm') || Input.pointer.justDown)) {
+        Narrator.stop(); this.state = 'play';
+      }
       return;
     }
     if (this.state === 'play') this._updatePlay(dt);
     if (this.state === 'dead') {
       this.player.update(dt, this.level, this.gravity);
-      if (this.retryBtn.update() || Input.just('confirm')) { Sound.select(); this.game.scenes.go('stage' + this.cfg.id); }
+      if (this.retryBtn.update() || Input.just('confirm')) { Narrator.stop(); Sound.select(); this.game.scenes.go('stage' + this.cfg.id); }
     }
     if (this.state === 'win') {
-      if (this.nextBtn.update() || Input.just('confirm')) { Sound.select(); this.game.scenes.go('stageSelect'); }
+      this.winT = (this.winT || 0) + dt;
+      if (this.nextBtn.update() || Input.just('confirm') || (this.winT > 0.6 && Input.pointer.justDown)) {
+        Narrator.stop(); Sound.select(); this.game.scenes.go('stageSelect');
+      }
     }
     this._updateCamera();
   }
@@ -130,6 +134,17 @@ class PlatformerStage extends Scene {
   // ---------- رندر ----------
   render(ctx) {
     const W = this.game.width, H = this.game.height;
+    const st = STAGES[this.cfg.id - 1];
+
+    if (this.state === 'intro') {
+      StoryCard.intro(ctx, W, H, { id: this.cfg.id, title: st.title, subtitle: st.env, t: this.timer });
+      return;
+    }
+    if (this.state === 'win') {
+      StoryCard.win(ctx, W, H, { id: this.cfg.id, title: this.cfg.win.title, lines: this.cfg.win.lines, score: this.score, t: this.timer, ready: (this.winT || 0) > 0.8 });
+      return;
+    }
+
     this._sky(ctx, W, H);
     this._parallax(ctx, W, H);
 
@@ -145,9 +160,7 @@ class PlatformerStage extends Scene {
 
     this._renderParticles(ctx);
     this._hud(ctx, W, H);
-    if (this.state === 'intro') this._intro(ctx, W, H);
     if (this.state === 'dead') this._dead(ctx, W, H);
-    if (this.state === 'win') this._win(ctx, W, H);
   }
 
   _sky(ctx, W, H) {

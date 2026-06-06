@@ -41,15 +41,16 @@ class Stage2Scene extends Scene {
     }
 
     if (this.state === 'intro') {
-      if (this.t > 2.5 || Input.just('jump') || Input.pointer.justDown) this.state = 'play';
+      if (this.t > 0.4 && (Input.just('jump') || Input.just('confirm') || Input.pointer.justDown)) { Narrator.stop(); this.state = 'play'; }
       return;
     }
     if (this.state === 'dead') {
-      if (this.retryBtn.update() || Input.just('confirm')) { Sound.select(); this.game.scenes.go('stage2'); }
+      if (this.retryBtn.update() || Input.just('confirm')) { Narrator.stop(); Sound.select(); this.game.scenes.go('stage2'); }
       return;
     }
     if (this.state === 'win') {
-      if (this.nextBtn.update() || Input.just('confirm')) { Sound.select(); this.game.scenes.go('stageSelect'); }
+      this.winT = (this.winT || 0) + dt;
+      if (this.nextBtn.update() || Input.just('confirm') || (this.winT > 0.6 && Input.pointer.justDown)) { Narrator.stop(); Sound.select(); this.game.scenes.go('stageSelect'); }
       return;
     }
 
@@ -150,6 +151,16 @@ class Stage2Scene extends Scene {
   // ---------- رندر ----------
   render(ctx) {
     const W = this.game.width, H = this.game.height;
+
+    if (this.state === 'intro') {
+      StoryCard.intro(ctx, W, H, { id: 2, title: 'پرواز سیمرغ', subtitle: 'آسمان البرز', t: this.t });
+      return;
+    }
+    if (this.state === 'win') {
+      StoryCard.win(ctx, W, H, { id: 2, title: 'از طوفان گذشتی!', lines: ['سیمرغ زال را به آشیانه رساند.'], score: this.score, t: this.t, ready: (this.winT || 0) > 0.8 });
+      return;
+    }
+
     this._sky(ctx, W, H);
     for (const c of this.clouds) this._cloud(ctx, c);
 
@@ -160,10 +171,8 @@ class Stage2Scene extends Scene {
     if (this.flash > 0) { ctx.fillStyle = Utils.rgba(255, 255, 255, this.flash * 0.5); ctx.fillRect(0, 0, W, H); }
 
     this._hud(ctx, W, H);
-    if (this.state === 'intro') this._intro(ctx, W, H);
     if (this.state === 'storm') Utils.text(ctx, 'طوفان بزرگ البرز! دوام بیاور', W / 2, 80, 24, '#ffcf6a');
     if (this.state === 'dead') this._dead(ctx, W, H);
-    if (this.state === 'win') this._win(ctx, W, H);
   }
 
   _sky(ctx, W, H) {

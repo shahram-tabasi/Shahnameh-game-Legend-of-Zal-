@@ -76,8 +76,9 @@ class Stage1Scene extends Scene {
     }
 
     if (this.state === 'intro') {
-      if (this.timer > 3 || Input.just('jump') || Input.just('confirm') || Input.pointer.justDown)
-        this.state = 'play';
+      if (this.timer > 0.4 && (Input.just('jump') || Input.just('confirm') || Input.pointer.justDown)) {
+        Narrator.stop(); this.state = 'play';
+      }
       return;
     }
 
@@ -85,11 +86,14 @@ class Stage1Scene extends Scene {
 
     if (this.state === 'dead') {
       this.player.update(dt, this.level, this.gravity);
-      if (this.retryBtn.update() || Input.just('confirm')) { Sound.select(); this.game.scenes.go('stage1'); }
+      if (this.retryBtn.update() || Input.just('confirm')) { Narrator.stop(); Sound.select(); this.game.scenes.go('stage1'); }
     }
 
     if (this.state === 'win') {
-      if (this.nextBtn.update() || Input.just('confirm')) { Sound.select(); this.game.scenes.go('stageSelect'); }
+      this.winT = (this.winT || 0) + dt;
+      if (this.nextBtn.update() || Input.just('confirm') || (this.winT > 0.6 && Input.pointer.justDown)) {
+        Narrator.stop(); Sound.select(); this.game.scenes.go('stageSelect');
+      }
     }
 
     this._updateCamera();
@@ -149,6 +153,16 @@ class Stage1Scene extends Scene {
   // ---------- رندر ----------
   render(ctx) {
     const W = this.game.width, H = this.game.height;
+
+    if (this.state === 'intro') {
+      StoryCard.intro(ctx, W, H, { id: 1, title: 'کودک رهاشده', subtitle: 'کوه البرز', t: this.timer });
+      return;
+    }
+    if (this.state === 'win') {
+      StoryCard.win(ctx, W, H, { id: 1, title: 'سیمرغ زال را پذیرفت', lines: ['و او را به آشیانهٔ خود برد.'], score: this.score, t: this.timer, ready: (this.winT || 0) > 0.8 });
+      return;
+    }
+
     this._sky(ctx, W, H);
     this._parallax(ctx, W, H);
 
@@ -166,9 +180,7 @@ class Stage1Scene extends Scene {
     this._snow(ctx);
     this._hud(ctx, W, H);
 
-    if (this.state === 'intro') this._intro(ctx, W, H);
     if (this.state === 'dead') this._deadScreen(ctx, W, H);
-    if (this.state === 'win') this._winScreen(ctx, W, H);
   }
 
   _sky(ctx, W, H) {
