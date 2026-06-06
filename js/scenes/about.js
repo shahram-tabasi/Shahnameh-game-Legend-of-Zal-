@@ -10,6 +10,8 @@ class AboutScene extends Scene {
       r: Math.random() * 1.4 + 0.3, tw: Math.random() * Math.PI * 2
     }));
     this.backBtn = new UIButton(30, 24, 110, 42, '‹ بازگشت', { size: 18 });
+    this.narrBtn = new UIButton(this.game.width - 250, 24, 220, 42, '', { size: 16 });
+    this._syncNarrLabel();
 
     // خلاصه داستان زال (شکسته به خطوط برای نمایش)
     this.story = [
@@ -23,9 +25,23 @@ class AboutScene extends Scene {
     ];
   }
 
+  _syncNarrLabel() {
+    const on = Narrator.enabled && Narrator.supported;
+    this.narrBtn.label = Narrator.supported
+      ? (on ? '🔊 روایت داستان: روشن' : '🔇 روایت داستان: خاموش')
+      : '🔇 روایت پشتیبانی نمی‌شود';
+    this.narrBtn.locked = !Narrator.supported;
+  }
+
   update(dt) {
     this.t += dt;
     if (this.backBtn.update() || Input.just('back')) { Sound.select(); this.game.scenes.go('menu'); }
+    if (this.narrBtn.update()) {
+      Sound.select();
+      const on = Narrator.toggle();
+      if (on) Narrator.speak('روایت داستان روشن شد.');
+      this._syncNarrLabel();
+    }
   }
 
   render(ctx) {
@@ -41,6 +57,7 @@ class AboutScene extends Scene {
     }
 
     this.backBtn.render(ctx);
+    this.narrBtn.render(ctx);
 
     ctx.save();
     ctx.shadowColor = '#d9b65a'; ctx.shadowBlur = 16;
@@ -72,10 +89,10 @@ class AboutScene extends Scene {
     Utils.text(ctx, '🦅 مکانیک عقاب', colL + 130, 320, 19, '#7ec0e8', 'left');
     const eagle = [
       'از مرحله ۳، عقاب همراه توست.',
-      'با نگه‌داشتن دکمه، عقاب یک نگهبان را',
-      'سرگرم می‌کند تا تو بقیه را شکست دهی.',
-      'سریع باش! اگر دیر کنی عقاب خسته',
-      'می‌شود و به زمین می‌افتد.'
+      'عقاب را به سراغ یک نگهبان بفرست تا',
+      'سرگرم شود؛ آنگاه با تماس او را بکش',
+      'یا سراغ نگهبان دیگر برو.',
+      'سریع باش! اگر دیر کنی عقاب خسته می‌شود.'
     ];
     y = 348;
     for (const e of eagle) { Utils.text(ctx, e, colL + 130, y, 14, '#bcd6e8', 'left'); y += 24; }

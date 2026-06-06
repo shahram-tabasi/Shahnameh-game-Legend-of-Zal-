@@ -27,6 +27,7 @@ class Game {
   start() {
     Input.init(this.canvas);
     Sound.init();
+    Narrator.init();
     this._resize();
     window.addEventListener('resize', () => this._resize());
 

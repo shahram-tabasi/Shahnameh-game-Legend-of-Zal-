@@ -21,6 +21,8 @@ class Stage3Scene extends Scene {
       x: Math.random() * this.game.width, y: Math.random() * this.game.height,
       s: Math.random() * 1.5 + 0.5, vy: Math.random() * 30 + 20
     }));
+
+    Narrator.speak('بچه عقاب در چنگال شیر کوهستان گرفتار است. عقابت را به سراغ نگهبان بفرست تا سرگرم شود، سپس او را از پای درآور.');
   }
 
   _buildLevel() {
@@ -105,14 +107,16 @@ class Stage3Scene extends Scene {
       if (!e.alive) continue;
       if (Utils.aabb(this.player.bounds, e.bounds)) {
         const fromTop = this.player.vy > 0 && (this.player.y + this.player.h - e.y) < 28;
-        if (fromTop && e.stunned <= 0) {
-          e.stomp();
-          this.player.vy = -420; this.score += 20;
-          if (!e.alive && e === this.lion) this.lionDefeated = true;
-        } else if (e.stunned <= 0) {
+        if (e.stunned > 0) {                 // سرگرمِ عقاب — می‌توان او را کشت
+          if (e.stomp()) this.score += 20;
+          if (fromTop) this.player.vy = -420;
+        } else if (fromTop) {
+          if (e.stomp()) this.score += 20;
+          this.player.vy = -420;
+        } else {
           this.player.hurt(e.dmg, this.player.x < e.x ? -1 : 1);
         }
-        // اگر دشمن سرگرم عقاب است، بی‌خطر است و می‌توان رد شد
+        if (!e.alive && e === this.lion) this.lionDefeated = true;
       }
     }
 
@@ -120,6 +124,7 @@ class Stage3Scene extends Scene {
 
     if (this.lionDefeated && Utils.aabb(this.player.bounds, this.goal)) {
       this.state = 'win'; this.winT = 0; Sound.win();
+      Narrator.speak('بچه عقاب نجات یافت. عقاب ایرانی همراه زال می‌شود.');
     }
   }
 

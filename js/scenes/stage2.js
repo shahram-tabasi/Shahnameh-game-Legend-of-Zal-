@@ -27,6 +27,8 @@ class Stage2Scene extends Scene {
 
     this.retryBtn = new UIButton(this.game.width / 2 - 110, 330, 220, 50, 'تلاش دوباره', { size: 22 });
     this.nextBtn = new UIButton(this.game.width / 2 - 110, 380, 220, 50, 'ادامه', { size: 22 });
+
+    Narrator.speak('آسمان البرز. سیمرغ، زال را به آشیانهٔ خود می‌برد. از صاعقه و طوفان و تیر شکارچیان بگذر.');
   }
 
   update(dt) {
@@ -88,7 +90,10 @@ class Stage2Scene extends Scene {
 
     if (this.state === 'storm') {
       this.stormTimer -= dt;
-      if (this.stormTimer <= 0) { this.state = 'win'; this.winT = 0; Sound.win(); }
+      if (this.stormTimer <= 0) {
+        this.state = 'win'; this.winT = 0; Sound.win();
+        Narrator.speak('از طوفان بزرگ البرز گذشتی. سیمرغ زال را به آشیانه می‌رساند.');
+      }
     }
   }
 

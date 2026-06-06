@@ -30,6 +30,7 @@ class PlatformerStage extends Scene {
     this.nextBtn = new UIButton(this.game.width / 2 - 110, 380, 220, 50, 'ادامه', { size: 22 });
 
     this._initParticles();
+    Narrator.speak(c.intro.title + '. ' + c.intro.lines.join(' '));
   }
 
   _initParticles() {
@@ -92,10 +93,13 @@ class PlatformerStage extends Scene {
       if (!e.alive) continue;
       if (Utils.aabb(this.player.bounds, e.bounds)) {
         const fromTop = this.player.vy > 0 && (this.player.y + this.player.h - e.y) < 30;
-        if (fromTop && e.stunned <= 0) {
-          e.stomp();
-          this.player.vy = -440; this.score += 20;
-        } else if (e.stunned <= 0) {
+        if (e.stunned > 0) {                 // سرگرمِ عقاب — می‌توان او را از پای درآورد
+          if (e.stomp()) this.score += 20;
+          if (fromTop) this.player.vy = -440;
+        } else if (fromTop) {
+          if (e.stomp()) this.score += 20;
+          this.player.vy = -440;
+        } else {
           this.player.hurt(e.dmg, this.player.x < e.x ? -1 : 1);
         }
       }
@@ -111,6 +115,7 @@ class PlatformerStage extends Scene {
 
     if (this.bossesDead && Utils.aabb(this.player.bounds, this.goal)) {
       this.state = 'win'; this.winT = 0; Sound.win();
+      Narrator.speak(this.cfg.win.title + '. ' + this.cfg.win.lines.join(' '));
     }
   }
 

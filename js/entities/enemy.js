@@ -33,20 +33,25 @@ class Enemy {
     // باس‌ها و مینی‌باس‌ها بازیکن را تعقیب می‌کنند و نوار جان دارند
     this.isBoss = ['boss', 'lion', 'hyena', 'div', 'champion'].includes(type);
     this.stunned = 0;        // وقتی عقاب سرگرمش کرده
+    this.hitCD = 0;          // فاصلهٔ بین ضربه‌ها (جلوگیری از چند ضربه در یک لحظه)
   }
 
   get bounds() { return { x: this.x, y: this.y, w: this.w, h: this.h }; }
 
-  // ضربه از بالا (پرش روی سر دشمن)
+  // ضربه (پرش روی سر یا حمله به دشمنِ سرگرمِ عقاب)
   stomp() {
+    if (this.hitCD > 0) return false;
+    this.hitCD = 0.25;
     this.hp--;
     Sound.hit();
     if (this.hp <= 0) this.alive = false;
+    return true;
   }
 
   update(dt, level, player) {
     if (!this.alive) return;
     this.animT += dt;
+    if (this.hitCD > 0) this.hitCD -= dt;
 
     if (this.stunned > 0) {     // درگیر عقاب
       this.stunned -= dt;
