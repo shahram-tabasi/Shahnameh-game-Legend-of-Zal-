@@ -13,6 +13,7 @@ class Game {
     this.scenes.register('title', TitleScene);
     this.scenes.register('menu', MenuScene);
     this.scenes.register('about', AboutScene);
+    this.scenes.register('gallery', GalleryScene);
     this.scenes.register('stageSelect', StageSelectScene);
     this.scenes.register('stage1', Stage1Scene);
     this.scenes.register('stage2', Stage2Scene);

@@ -9,15 +9,17 @@ class MenuScene extends Scene {
       x: Math.random() * W, y: Math.random() * 300,
       r: Math.random() * 1.6 + 0.4, tw: Math.random() * Math.PI * 2
     }));
-    this.startBtn = new UIButton(W / 2 - 130, 348, 260, 52, 'شروع بازی', { size: 26 });
-    this.selectBtn = new UIButton(W / 2 - 130, 410, 260, 46, 'انتخاب مرحله', { size: 22 });
-    this.aboutBtn = new UIButton(W / 2 - 130, 464, 260, 42, 'داستان و راهنما', { size: 20 });
+    this.startBtn = new UIButton(W / 2 - 130, 326, 260, 48, 'شروع بازی', { size: 25 });
+    this.selectBtn = new UIButton(W / 2 - 130, 382, 260, 42, 'انتخاب مرحله', { size: 21 });
+    this.galleryBtn = new UIButton(W / 2 - 130, 430, 260, 38, 'گالری شخصیت‌ها', { size: 19 });
+    this.aboutBtn = new UIButton(W / 2 - 130, 474, 260, 38, 'داستان و راهنما', { size: 19 });
   }
 
   update(dt) {
     this.t += dt;
     if (this.startBtn.update()) { Sound.select(); this.game.scenes.go('stage1'); }
     if (this.selectBtn.update()) { Sound.select(); this.game.scenes.go('stageSelect'); }
+    if (this.galleryBtn.update()) { Sound.select(); this.game.scenes.go('gallery'); }
     if (this.aboutBtn.update()) { Sound.select(); this.game.scenes.go('about'); }
     if (Input.just('confirm')) this.game.scenes.go('stage1');
   }
@@ -57,8 +59,9 @@ class MenuScene extends Scene {
 
     this.startBtn.render(ctx);
     this.selectBtn.render(ctx);
+    this.galleryBtn.render(ctx);
     this.aboutBtn.render(ctx);
-    Utils.text(ctx, 'دموی فنی — فصل اول', W / 2, H - 18, 13, '#7a7e95');
+    Utils.text(ctx, 'دموی فنی — فصل اول', W / 2, H - 14, 12, '#7a7e95');
   }
 
   _mountains(ctx, W, H) {
