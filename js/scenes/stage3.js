@@ -22,7 +22,7 @@ class Stage3Scene extends Scene {
       s: Math.random() * 1.5 + 0.5, vy: Math.random() * 30 + 20
     }));
 
-    Narrator.speak('بچه عقاب در چنگال شیر کوهستان گرفتار است. عقابت را به سراغ نگهبان بفرست تا سرگرم شود، سپس او را از پای درآور.');
+    Narrator.play('stage3-intro');
   }
 
   _buildLevel() {
@@ -124,7 +124,7 @@ class Stage3Scene extends Scene {
 
     if (this.lionDefeated && Utils.aabb(this.player.bounds, this.goal)) {
       this.state = 'win'; this.winT = 0; Sound.win();
-      Narrator.speak('بچه عقاب نجات یافت. عقاب ایرانی همراه زال می‌شود.');
+      Narrator.play('stage3-win');
     }
   }
 

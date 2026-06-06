@@ -6,6 +6,8 @@
   "scripts": {
     "assets:source": "python3 scripts/gen-assets.py",
     "assets:gen": "npm run assets:source && npx @capacitor/assets generate --android --assetPath resources",
+    "narration:data": "node scripts/build-narration-data.js",
+    "narration": "node scripts/build-narration-data.js && python3 scripts/gen-narration.py",
     "build:www": "node scripts/build-www.js",
     "android:add": "npm run build:www && npx cap add android",
     "android:sync": "npm run build:www && npx cap sync android",

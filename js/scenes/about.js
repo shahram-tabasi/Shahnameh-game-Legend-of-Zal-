@@ -27,11 +27,8 @@ class AboutScene extends Scene {
   }
 
   _syncLabels() {
-    const nOn = Narrator.enabled && Narrator.supported;
-    this.narrBtn.label = Narrator.supported
-      ? (nOn ? '🔊 روایت داستان: روشن' : '🔇 روایت داستان: خاموش')
-      : '🔇 روایت پشتیبانی نمی‌شود';
-    this.narrBtn.locked = !Narrator.supported;
+    this.narrBtn.label = Narrator.enabled ? '🔊 روایت داستان: روشن' : '🔇 روایت داستان: خاموش';
+    this.narrBtn.locked = false;
 
     const mOk = !!Music.ctx;
     this.musicBtn.label = mOk
@@ -45,8 +42,7 @@ class AboutScene extends Scene {
     if (this.backBtn.update() || Input.just('back')) { Sound.select(); this.game.scenes.go('menu'); }
     if (this.narrBtn.update()) {
       Sound.select();
-      const on = Narrator.toggle();
-      if (on) Narrator.speak('روایت داستان روشن شد.');
+      Narrator.toggle();
       this._syncLabels();
     }
     if (this.musicBtn.update()) {

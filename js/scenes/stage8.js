@@ -25,7 +25,7 @@ class Stage8Scene extends Scene {
     this.retryBtn = new UIButton(W / 2 - 110, 340, 220, 50, 'تلاش دوباره', { size: 22 });
     this.nextBtn = new UIButton(W / 2 - 110, 392, 220, 50, 'پایان فصل', { size: 22 });
 
-    Narrator.speak('صحرای سوزان. برای زایش رستم باید پر سیمرغ را بیاوری. سوار بر اسب از غول صحرا بگریز و از موانع بپر.');
+    Narrator.play('stage8-intro');
   }
 
   update(dt) {
@@ -74,7 +74,7 @@ class Stage8Scene extends Scene {
     // رسیدن به پر سیمرغ
     if (this.dist >= this.goalDist) {
       this.state = 'win'; this.winT = 0; Sound.win();
-      Narrator.speak('زال پر سیمرغ را آتش زد. سیمرغ پدیدار شد و روش زایمان را آموخت. رستم، بزرگ‌ترین پهلوان شاهنامه، زاده شد.');
+      Narrator.play('stage8-win');
       return;
     }
 

@@ -30,7 +30,7 @@ class PlatformerStage extends Scene {
     this.nextBtn = new UIButton(this.game.width / 2 - 110, 380, 220, 50, 'ادامه', { size: 22 });
 
     this._initParticles();
-    Narrator.speak(c.intro.title + '. ' + c.intro.lines.join(' '));
+    Narrator.play('stage' + c.id + '-intro');
   }
 
   _initParticles() {
@@ -115,7 +115,7 @@ class PlatformerStage extends Scene {
 
     if (this.bossesDead && Utils.aabb(this.player.bounds, this.goal)) {
       this.state = 'win'; this.winT = 0; Sound.win();
-      Narrator.speak(this.cfg.win.title + '. ' + this.cfg.win.lines.join(' '));
+      Narrator.play('stage' + this.cfg.id + '-win');
     }
   }
 

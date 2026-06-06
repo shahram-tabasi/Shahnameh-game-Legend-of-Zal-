@@ -6,6 +6,8 @@ const Narrator = {
   enabled: true,
   supported: false,
   voice: null,
+  basePath: 'assets/audio/',
+  _audio: null,
 
   init() {
     this.supported = typeof window !== 'undefined' && 'speechSynthesis' in window;
@@ -18,14 +20,32 @@ const Narrator = {
   _pickVoice() {
     try {
       const vs = window.speechSynthesis.getVoices() || [];
-      // اولویت با صدای فارسی، سپس عربی (نزدیک‌ترین آوا)، وگرنه پیش‌فرض
       this.voice = vs.find(v => /fa|persian|farsi/i.test(v.lang + ' ' + v.name))
                 || vs.find(v => /^ar/i.test(v.lang))
                 || null;
     } catch (e) { /* بی‌خیال */ }
   },
 
-  // متن را بلند می‌خواند (روایت قبلی را قطع می‌کند)
+  // پخش روایت یک بخش: اول فایل صوتی (صدای هوش مصنوعی)، اگر نبود speechSynthesis
+  play(key) {
+    if (!this.enabled || typeof window === 'undefined') return;
+    this.stop();
+    const text = (typeof NARRATION !== 'undefined' && NARRATION[key]) ? NARRATION[key] : '';
+    try {
+      const a = new Audio(this.basePath + key + '.mp3');
+      this._audio = a;
+      a.volume = 1.0;
+      let fell = false;
+      const fallback = () => { if (!fell) { fell = true; if (this._audio === a) this._audio = null; this.speak(text); } };
+      a.addEventListener('error', fallback, { once: true });   // فایل موجود نیست
+      const p = a.play();
+      if (p && p.catch) p.catch(fallback);                     // پخش مسدود شد
+    } catch (e) {
+      this.speak(text);
+    }
+  },
+
+  // خواندن متن با صدای مرورگر (مسیر پشتیبان)
   speak(text) {
     if (!this.enabled || !this.supported || !text) return;
     try {
@@ -39,6 +59,7 @@ const Narrator = {
   },
 
   stop() {
+    if (this._audio) { try { this._audio.pause(); } catch (e) {} this._audio = null; }
     if (this.supported) { try { window.speechSynthesis.cancel(); } catch (e) {} }
   },
 

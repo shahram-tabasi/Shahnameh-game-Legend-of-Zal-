@@ -21,7 +21,7 @@ class Stage1Scene extends Scene {
       s: Math.random() * 1.5 + 0.5, vy: Math.random() * 30 + 20
     }));
 
-    Narrator.speak('کوه البرز. سام، نوزاد سپیدمو را در کوه رها می‌کند. زال باید به سوی سکوی مقدس سیمرغ بالا برود.');
+    Narrator.play('stage1-intro');
   }
 
   _buildLevel() {
@@ -134,7 +134,7 @@ class Stage1Scene extends Scene {
       this.state = 'win';
       this.winT = 0;
       Sound.win();
-      Narrator.speak('سیمرغ ظاهر می‌شود و زال را می‌پذیرد و او را به آشیانهٔ خود می‌برد.');
+      Narrator.play('stage1-win');
     }
   }
 
