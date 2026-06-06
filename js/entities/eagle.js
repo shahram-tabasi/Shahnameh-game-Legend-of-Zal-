@@ -16,7 +16,7 @@ class Eagle {
   // فراخوانی عقاب به سمت نزدیک‌ترین دشمن جلوی بازیکن
   dispatch(player, enemies) {
     if (this.active || this.cooldown > 0) return false;
-    let best = null, bestD = 320;          // بُرد محدود
+    let best = null, bestD = 480;          // بُرد فراخوانی
     for (const e of enemies) {
       if (!e.alive || e.stunned > 0) continue;
       const d = Math.hypot(e.x - player.x, e.y - player.y);

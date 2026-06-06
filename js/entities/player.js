@@ -6,8 +6,9 @@ class Player {
     this.x = x; this.y = y;
     this.w = 28; this.h = 44;
     this.vx = 0; this.vy = 0;
-    this.speed = 220;
-    this.jumpPower = 560;
+    this.speed = 230;
+    this.jumpPower = 770;     // پرش بلند (با نگه‌داشتن دکمه)
+    this.coyote = 0;          // مهلت کوتاه پرش پس از ترک لبه
     this.onGround = false;
     this.facing = 1;          // ۱ راست، ۱- چپ
     this.maxHp = 5;
@@ -45,14 +46,19 @@ class Player {
     if (move !== 0) { this.facing = move; this.animT += dt * 8; }
     this.vx = Utils.lerp(this.vx, move * this.speed, 0.25);
 
-    // پرش
-    if (Input.just('jump') && this.onGround) {
+    // پرش — با مهلت کوتاه «coyote» تا پرش‌ها روان باشند
+    if (this.onGround) this.coyote = 0.1;
+    else if (this.coyote > 0) this.coyote -= dt;
+
+    if (Input.just('jump') && this.coyote > 0) {
       this.vy = -this.jumpPower;
       this.onGround = false;
+      this.coyote = 0;
       Sound.jump();
     }
-    // پرش کوتاه‌تر اگر دکمه رها شد
-    if (!Input.down('jump') && this.vy < -200) this.vy = -200;
+    // دو مدل پرش: رهاکردن زودهنگام دکمه = پرش کوتاه، نگه‌داشتن = پرش بلند
+    if (!Input.down('jump') && this.vy < -this.jumpPower * 0.5)
+      this.vy = -this.jumpPower * 0.5;
 
     // جاذبه
     this.vy += gravity * dt;
