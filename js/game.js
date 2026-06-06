@@ -16,6 +16,11 @@ class Game {
     this.scenes.register('stage1', Stage1Scene);
     this.scenes.register('stage2', Stage2Scene);
     this.scenes.register('stage3', Stage3Scene);
+    this.scenes.register('stage4', Stage4Scene);
+    this.scenes.register('stage5', Stage5Scene);
+    this.scenes.register('stage6', Stage6Scene);
+    this.scenes.register('stage7', Stage7Scene);
+    this.scenes.register('stage8', Stage8Scene);
     this.scenes.register('placeholder', PlaceholderScene);
   }
 
