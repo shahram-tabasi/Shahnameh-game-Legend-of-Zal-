@@ -10,6 +10,7 @@ class Game {
     this.lastT = 0;
 
     this.scenes = new SceneManager(this);
+    this.scenes.register('title', TitleScene);
     this.scenes.register('menu', MenuScene);
     this.scenes.register('about', AboutScene);
     this.scenes.register('stageSelect', StageSelectScene);
@@ -35,7 +36,7 @@ class Game {
     const loading = document.getElementById('loading');
     if (loading) loading.classList.add('hidden');
 
-    this.scenes.go('menu');
+    this.scenes.go('title');
     requestAnimationFrame((t) => this._loop(t));
   }
 
