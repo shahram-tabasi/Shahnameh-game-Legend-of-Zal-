@@ -11,6 +11,7 @@ class Game {
 
     this.scenes = new SceneManager(this);
     this.scenes.register('menu', MenuScene);
+    this.scenes.register('about', AboutScene);
     this.scenes.register('stageSelect', StageSelectScene);
     this.scenes.register('stage1', Stage1Scene);
     this.scenes.register('stage2', Stage2Scene);

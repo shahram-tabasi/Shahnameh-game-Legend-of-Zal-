@@ -22,6 +22,25 @@ npm run android:sync
 npm run android:open
 ```
 
+## آیکون و صفحه راه‌انداز (Splash)
+
+تصاویر منبع در پوشه `resources/` آماده‌اند (نماد پر سیمرغ) و با اسکریپت پایتون بازتولید می‌شوند:
+
+```bash
+# بازسازی تصاویر منبع (نیاز به پایتون ۳)
+npm run assets:source
+
+# تولید آیکون و splash برای همه ابعاد اندروید و کپی در پروژه
+npm run assets:gen
+```
+
+دستور `assets:gen` ابتدا تصاویر منبع را می‌سازد و سپس با `@capacitor/assets`
+آیکون‌ها و splashها را در ابعاد مختلف اندروید تولید و در `android/` قرار می‌دهد.
+این کار را پس از `android:add` و قبل از ساخت APK انجام بده.
+
+> برای طرح دلخواه خودت، کافی است فایل‌های `resources/icon.png` (۱۰۲۴×۱۰۲۴) و
+> `resources/splash.png` (۲۷۳۲×۲۷۳۲) را جایگزین کنی و دوباره `npm run assets:gen` را اجرا کنی.
+
 سپس در Android Studio:
 - برای تست روی گوشی/شبیه‌ساز: دکمه **Run ▶** را بزن.
 - برای ساخت فایل نصبی: منوی **Build → Build Bundle(s)/APK(s) → Build APK(s)**.

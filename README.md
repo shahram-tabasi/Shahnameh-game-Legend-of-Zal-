@@ -52,12 +52,16 @@ python3 -m http.server 8000
 │   │   └── eagle.js        # عقاب همراه (مکانیک امضای بازی)
 │   └── scenes/
 │       ├── menu.js         # منوی اصلی
+│       ├── about.js        # صفحه داستان و راهنما
 │       ├── stageSelect.js  # انتخاب مرحله (نمای ۸ مرحله)
 │       ├── stage1.js       # مرحله ۱ — پلتفرمر (قابل بازی)
 │       ├── stage2.js       # مرحله ۲ — پرواز سیمرغ (قابل بازی)
 │       ├── stage3.js       # مرحله ۳ — مکانیک عقاب (قابل بازی)
 │       └── placeholder.js  # نگه‌دارنده مراحل ۴ تا ۸
-├── scripts/build-www.js    # ساخت پوشه www/ برای Capacitor
+├── resources/              # آیکون و splash منبع (پر سیمرغ)
+├── scripts/
+│   ├── build-www.js        # ساخت پوشه www/ برای Capacitor
+│   └── gen-assets.py       # تولید آیکون و splash
 ├── capacitor.config.json   # پیکربندی اپ اندروید
 ├── package.json            # اسکریپت‌های ساخت اندروید
 ├── .github/workflows/      # انتشار خودکار روی GitHub Pages
