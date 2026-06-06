@@ -1,0 +1,61 @@
+name: تست و ساخت نسخه وب
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-web:
+    name: بررسی و ساخت نسخه وب
+    runs-on: ubuntu-latest
+    steps:
+      - name: دریافت کد
+        uses: actions/checkout@v4
+
+      - name: نصب Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: بررسی نحوی فایل‌های JavaScript
+        run: |
+          set -e
+          for f in $(find js -name '*.js'); do
+            node --check "$f"
+            echo "  ✓ $f"
+          done
+          echo "همه فایل‌های JS سالم‌اند."
+
+      - name: بررسی ارجاع اسکریپت‌ها در index.html
+        run: |
+          missing=0
+          for p in $(grep -oP 'src="\K[^"]+' index.html); do
+            if [ ! -f "$p" ]; then echo "  ✗ یافت نشد: $p"; missing=1; else echo "  ✓ $p"; fi
+          done
+          if [ "$missing" = "1" ]; then echo "خطا: برخی اسکریپت‌ها وجود ندارند."; exit 1; fi
+          echo "همه ارجاع‌های اسکریپت درست‌اند."
+
+      - name: ساخت پوشه www (همان چیزی که در اپ اندروید بسته‌بندی می‌شود)
+        run: node scripts/build-www.js
+
+      - name: بارگذاری پیش‌نمایش قابل دانلود وب
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-preview
+          path: www
+          if-no-files-found: error
+
+      - name: خلاصه اجرا
+        run: |
+          {
+            echo "## ✅ نسخه وب با موفقیت ساخته و تست شد"
+            echo ""
+            echo "برای تست محلی:"
+            echo "1. از تب **Artifacts** همین اجرا، فایل \`web-preview\` را دانلود کن."
+            echo "2. از حالت فشرده خارج کن و \`index.html\` را در مرورگر باز کن."
+            echo ""
+            echo "نسخه زندهٔ آنلاین از طریق ورک‌فلوی **Pages** منتشر می‌شود."
+          } >> "$GITHUB_STEP_SUMMARY"
