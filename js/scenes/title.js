@@ -45,9 +45,17 @@ class TitleScene extends Scene {
       Utils.text(ctx, 'در حال بارگذاری…', W / 2, H / 2 + 30, 18, '#c9b48a');
     }
 
-    const blink = 0.5 + Math.sin(this.t * 4) * 0.5;
+    // نوار تیره پشت پیام برای خوانایی
+    const g = ctx.createLinearGradient(0, H - barH - 16, 0, H);
+    g.addColorStop(0, 'rgba(8,10,20,0)'); g.addColorStop(1, 'rgba(8,10,20,0.92)');
+    ctx.fillStyle = g; ctx.fillRect(0, H - barH - 16, W, barH + 16);
+
+    const blink = 0.6 + Math.sin(this.t * 3.5) * 0.4;
+    ctx.save();
+    ctx.shadowColor = 'rgba(242,217,122,0.9)'; ctx.shadowBlur = 16;
     ctx.globalAlpha = blink;
-    Utils.text(ctx, 'برای شروع لمس کنید', W / 2, H - barH / 2, 20, '#f0e8d0');
+    Utils.text(ctx, '▸ برای شروع لمس کنید ◂', W / 2, H - barH / 2 + 2, 22, '#f6e6b0', 'center', '700');
+    ctx.restore();
     ctx.globalAlpha = 1;
   }
 }

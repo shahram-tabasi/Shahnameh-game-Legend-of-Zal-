@@ -54,14 +54,26 @@ class UIButton {
   }
 
   render(ctx) {
-    const c = this.locked ? '#555' : this.color;
-    ctx.globalAlpha = this.locked ? 0.5 : 1;
+    const c = this.locked ? '#777' : this.color;
+    const hov = this.hover && !this.locked;
+    ctx.globalAlpha = this.locked ? 0.55 : 1;
+
+    // پس‌زمینهٔ گرادیانی تیره برای خوانایی روی تصویر
     Utils.roundRect(ctx, this.x, this.y, this.w, this.h, 10);
-    ctx.fillStyle = this.hover && !this.locked ? Utils.rgba(217, 182, 90, 0.25) : Utils.rgba(20, 26, 48, 0.7);
-    ctx.fill();
-    ctx.lineWidth = 2; ctx.strokeStyle = c; ctx.stroke();
-    Utils.text(ctx, this.label, this.x + this.w / 2, this.y + this.h / 2, this.size, c);
-    if (this.locked) Utils.text(ctx, '🔒', this.x + this.w - 24, this.y + this.h / 2, 18, '#999');
+    const g = ctx.createLinearGradient(0, this.y, 0, this.y + this.h);
+    if (hov) { g.addColorStop(0, 'rgba(70,58,30,0.92)'); g.addColorStop(1, 'rgba(40,32,16,0.92)'); }
+    else { g.addColorStop(0, 'rgba(18,22,40,0.86)'); g.addColorStop(1, 'rgba(10,12,24,0.9)'); }
+    ctx.fillStyle = g; ctx.fill();
+
+    // قاب طلایی
+    if (hov) { ctx.save(); ctx.shadowColor = 'rgba(217,182,90,0.7)'; ctx.shadowBlur = 14; }
+    ctx.lineWidth = hov ? 2.5 : 1.8;
+    ctx.strokeStyle = hov ? '#f2d97a' : Utils.rgba(217, 182, 90, 0.75);
+    ctx.stroke();
+    if (hov) ctx.restore();
+
+    Utils.text(ctx, this.label, this.x + this.w / 2, this.y + this.h / 2, this.size, hov ? '#fff3d0' : c, 'center', '500');
+    if (this.locked) Utils.text(ctx, '🔒', this.x + this.w - 22, this.y + this.h / 2, 16, '#aaa');
     ctx.globalAlpha = 1;
   }
 }

@@ -38,7 +38,23 @@ class Game {
     if (loading) loading.classList.add('hidden');
 
     this.scenes.go('title');
-    requestAnimationFrame((t) => this._loop(t));
+
+    // پیش‌بارگذاری فونت وزیرمتن تا بوم از همان فریم اول از آن استفاده کند
+    let started = false;
+    const startLoop = () => {
+      if (started) return;
+      started = true;
+      requestAnimationFrame((t) => this._loop(t));
+    };
+    if (document.fonts && document.fonts.load) {
+      Promise.all([
+        document.fonts.load("400 20px 'Vazirmatn'"),
+        document.fonts.load("700 40px 'Vazirmatn'")
+      ]).then(startLoop).catch(startLoop);
+      setTimeout(startLoop, 600);   // در هر صورت شروع کن
+    } else {
+      startLoop();
+    }
   }
 
   // مقیاس‌بندی بوم متناسب با صفحه با حفظ نسبت ۱۶:۹

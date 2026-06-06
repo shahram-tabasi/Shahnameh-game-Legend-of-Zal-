@@ -20,9 +20,9 @@ const Utils = {
   rgba(r, g, b, a) { return `rgba(${r},${g},${b},${a})`; },
 
   // متن فارسی وسط‌چین
-  text(ctx, str, x, y, size, color, align = 'center', font = 'Tahoma') {
+  text(ctx, str, x, y, size, color, align = 'center', weight = '400') {
     ctx.fillStyle = color;
-    ctx.font = `${size}px ${font}`;
+    ctx.font = `${weight} ${size}px 'Vazirmatn', Tahoma, sans-serif`;
     ctx.textAlign = align;
     ctx.textBaseline = 'middle';
     ctx.fillText(str, x, y);

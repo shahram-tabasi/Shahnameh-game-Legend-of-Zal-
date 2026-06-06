@@ -54,6 +54,7 @@ class StageSelectScene extends Scene {
   }
 
   _nodePos(n, r) { return { x: r.x + n.u * r.dw, y: r.y + n.v * r.dh }; }
+  _nodeRadius(r) { return 0.066 * r.dw; }   // هم‌اندازه با دایرهٔ نقاشی‌شدهٔ نقشه
 
   update(dt) {
     this.t += dt;
@@ -61,11 +62,12 @@ class StageSelectScene extends Scene {
 
     if (this.loaded) {
       const r = this._rect();
+      const rad = this._nodeRadius(r);
       this.hover = -1;
       this.nodes.forEach((n, i) => {
         const p = this._nodePos(n, r);
         const d = Math.hypot(Input.pointer.x - p.x, Input.pointer.y - p.y);
-        if (d < 30) {
+        if (d < rad) {
           this.hover = i;
           if (Input.pointer.justDown) { Sound.select(); this.game.scenes.go('stage' + n.id); }
         }
@@ -98,37 +100,19 @@ class StageSelectScene extends Scene {
   }
 
   _nodes(ctx, r) {
+    // فقط یک هالهٔ ظریف هم‌تراز با دایرهٔ هر مرحله (شماره و عنوان از قبل روی نقشه هست)
+    const rad = this._nodeRadius(r);
     this.nodes.forEach((n, i) => {
       const p = this._nodePos(n, r);
       const on = this.hover === i;
-      const pulse = 0.6 + Math.sin(this.t * 3 + i) * 0.4;
-      const rad = on ? 26 : 22;
-
-      // حلقهٔ درخشان دور گره
+      const pulse = 0.5 + Math.sin(this.t * 3 + i) * 0.5;
       ctx.save();
-      ctx.shadowColor = '#ffcf6a'; ctx.shadowBlur = on ? 22 : 12 * pulse;
-      ctx.lineWidth = on ? 4 : 3;
-      ctx.strokeStyle = on ? '#ffe49a' : Utils.rgba(217, 182, 90, 0.85);
+      ctx.globalAlpha = on ? 1 : 0.30 + pulse * 0.18;
+      ctx.shadowColor = '#ffd277'; ctx.shadowBlur = on ? 26 : 12;
+      ctx.lineWidth = on ? 4 : 2.5;
+      ctx.strokeStyle = on ? '#ffe9a8' : 'rgba(255,210,120,0.85)';
       ctx.beginPath(); ctx.arc(p.x, p.y, rad, 0, Math.PI * 2); ctx.stroke();
       ctx.restore();
-
-      // شمارهٔ مرحله
-      ctx.fillStyle = on ? Utils.rgba(255, 210, 120, 0.35) : Utils.rgba(20, 26, 48, 0.45);
-      ctx.beginPath(); ctx.arc(p.x, p.y, rad - 4, 0, Math.PI * 2); ctx.fill();
-      Utils.text(ctx, this.faDigits[n.id], p.x, p.y, on ? 22 : 18, '#fff');
-
-      // عنوان مرحله هنگام اشاره
-      if (on) {
-        const st = STAGES[n.id - 1];
-        const label = this.faDigits[n.id] + '. ' + st.title;
-        const tw = label.length * 9 + 24;
-        const bx = Utils.clamp(p.x - tw / 2, 4, this.game.width - tw - 4);
-        const by = p.y - rad - 30;
-        Utils.roundRect(ctx, bx, by, tw, 24, 6);
-        ctx.fillStyle = Utils.rgba(10, 12, 22, 0.9); ctx.fill();
-        ctx.strokeStyle = '#d9b65a'; ctx.lineWidth = 1; ctx.stroke();
-        Utils.text(ctx, label, bx + tw / 2, by + 12, 14, '#f0e8d0');
-      }
     });
   }
 
