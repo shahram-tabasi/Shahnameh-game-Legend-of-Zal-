@@ -28,7 +28,7 @@ class StageSelectScene extends Scene {
         Input.pointer.y >= c.y && Input.pointer.y <= c.y + c.h;
       if (hit) {
         Sound.select();
-        if (c.st.playable) this.game.scenes.go('stage1');
+        if (c.st.playable) this.game.scenes.go('stage' + c.st.id);
         else this.game.scenes.go('placeholder', { stage: c.st });
       }
     }

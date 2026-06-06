@@ -13,6 +13,8 @@ class Game {
     this.scenes.register('menu', MenuScene);
     this.scenes.register('stageSelect', StageSelectScene);
     this.scenes.register('stage1', Stage1Scene);
+    this.scenes.register('stage2', Stage2Scene);
+    this.scenes.register('stage3', Stage3Scene);
     this.scenes.register('placeholder', PlaceholderScene);
   }
 

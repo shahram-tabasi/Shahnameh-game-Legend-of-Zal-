@@ -9,3 +9,10 @@ node_modules/
 dist/
 build/
 *.log
+
+# خروجی Capacitor
+www/
+android/
+ios/
+.gradle/
+package-lock.json

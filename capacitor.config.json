@@ -1,0 +1,9 @@
+{
+  "appId": "ir.shahnameh.legendofzal",
+  "appName": "افسانه زال",
+  "webDir": "www",
+  "backgroundColor": "#1a2238",
+  "android": {
+    "allowMixedContent": false
+  }
+}
