@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>افسانه زال | Legend of Zal</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="game-wrap">
+    <canvas id="game" width="960" height="540"></canvas>
+
+    <!-- کنترل‌های لمسی برای موبایل -->
+    <div id="touch-controls" class="hidden">
+      <div class="pad-left">
+        <button class="btn-dir" data-key="left">◀</button>
+        <button class="btn-dir" data-key="right">▶</button>
+      </div>
+      <div class="pad-right">
+        <button class="btn-act" data-key="eagle">عقاب</button>
+        <button class="btn-act btn-jump" data-key="jump">پرش</button>
+      </div>
+    </div>
+
+    <div id="loading">در حال بارگذاری…</div>
+  </div>
+
+  <!-- موتور بازی -->
+  <script src="js/utils.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/scene.js"></script>
+
+  <!-- موجودیت‌ها -->
+  <script src="js/entities/player.js"></script>
+  <script src="js/entities/enemy.js"></script>
+  <script src="js/entities/item.js"></script>
+  <script src="js/entities/eagle.js"></script>
+
+  <!-- صحنه‌ها -->
+  <script src="js/scenes/menu.js"></script>
+  <script src="js/scenes/stageSelect.js"></script>
+  <script src="js/scenes/stage1.js"></script>
+  <script src="js/scenes/placeholder.js"></script>
+
+  <!-- هسته -->
+  <script src="js/game.js"></script>
+</body>
+</html>
