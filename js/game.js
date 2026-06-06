@@ -28,6 +28,7 @@ class Game {
     Input.init(this.canvas);
     Sound.init();
     Narrator.init();
+    Music.init(Sound.ctx);
     this._resize();
     window.addEventListener('resize', () => this._resize());
 
@@ -52,6 +53,9 @@ class Game {
     let dt = (t - this.lastT) / 1000;
     this.lastT = t;
     if (dt > 0.05) dt = 0.05;        // جلوگیری از پرش بزرگ زمانی
+
+    // پس از اولین تعامل کاربر، موسیقی پس‌زمینه آغاز می‌شود (سیاست autoplay مرورگر)
+    if (Input.hadGesture) Music.start();
 
     this.scenes.update(dt);
     this.ctx.clearRect(0, 0, this.width, this.height);

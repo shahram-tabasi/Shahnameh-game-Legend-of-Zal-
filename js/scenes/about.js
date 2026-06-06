@@ -10,8 +10,9 @@ class AboutScene extends Scene {
       r: Math.random() * 1.4 + 0.3, tw: Math.random() * Math.PI * 2
     }));
     this.backBtn = new UIButton(30, 24, 110, 42, '‹ بازگشت', { size: 18 });
-    this.narrBtn = new UIButton(this.game.width - 250, 24, 220, 42, '', { size: 16 });
-    this._syncNarrLabel();
+    this.narrBtn = new UIButton(this.game.width - 250, 18, 220, 34, '', { size: 15 });
+    this.musicBtn = new UIButton(this.game.width - 250, 58, 220, 34, '', { size: 15 });
+    this._syncLabels();
 
     // خلاصه داستان زال (شکسته به خطوط برای نمایش)
     this.story = [
@@ -25,12 +26,18 @@ class AboutScene extends Scene {
     ];
   }
 
-  _syncNarrLabel() {
-    const on = Narrator.enabled && Narrator.supported;
+  _syncLabels() {
+    const nOn = Narrator.enabled && Narrator.supported;
     this.narrBtn.label = Narrator.supported
-      ? (on ? '🔊 روایت داستان: روشن' : '🔇 روایت داستان: خاموش')
+      ? (nOn ? '🔊 روایت داستان: روشن' : '🔇 روایت داستان: خاموش')
       : '🔇 روایت پشتیبانی نمی‌شود';
     this.narrBtn.locked = !Narrator.supported;
+
+    const mOk = !!Music.ctx;
+    this.musicBtn.label = mOk
+      ? (Music.enabled ? '🎵 موسیقی: روشن' : '🎵 موسیقی: خاموش')
+      : '🎵 موسیقی پشتیبانی نمی‌شود';
+    this.musicBtn.locked = !mOk;
   }
 
   update(dt) {
@@ -40,7 +47,12 @@ class AboutScene extends Scene {
       Sound.select();
       const on = Narrator.toggle();
       if (on) Narrator.speak('روایت داستان روشن شد.');
-      this._syncNarrLabel();
+      this._syncLabels();
+    }
+    if (this.musicBtn.update()) {
+      Sound.select();
+      Music.toggle();
+      this._syncLabels();
     }
   }
 
@@ -58,6 +70,7 @@ class AboutScene extends Scene {
 
     this.backBtn.render(ctx);
     this.narrBtn.render(ctx);
+    this.musicBtn.render(ctx);
 
     ctx.save();
     ctx.shadowColor = '#d9b65a'; ctx.shadowBlur = 16;
